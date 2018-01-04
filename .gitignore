@@ -1,6 +1,7 @@
 .env/*
 .ipynb_checkpoints/*
 .ropeproject/*
+*.ropeproject/*
 Gaze_UPMC_Food20.zip
 Gaze_UPMC_Food20/*
 Importing pre-trained model.ipynb
