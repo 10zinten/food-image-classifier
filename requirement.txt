@@ -1,0 +1,4 @@
+tensorflow==1.4.0
+django==1.11
+numpy
+scipy
