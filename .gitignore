@@ -1,0 +1,11 @@
+.env/*
+.ipynb_checkpoints/*
+.ropeproject/*
+Gaze_UPMC_Food20.zip
+Gaze_UPMC_Food20/*
+Importing pre-trained model.ipynb
+dataset/*
+db.sqlite3
+images/*
+*.pyc
+*.npy
