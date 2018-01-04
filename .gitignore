@@ -12,3 +12,4 @@ images/*
 *.npy
 media_cdn/*
 .ropeproject/*
+model/*
