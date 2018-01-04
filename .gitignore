@@ -11,3 +11,4 @@ images/*
 *.pyc
 *.npy
 media_cdn/*
+.ropeproject/*
