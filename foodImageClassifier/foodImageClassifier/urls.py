@@ -17,12 +17,12 @@ from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
-from classifier.views import predict, feed_forward
+from classifier.views import upload_img, predict
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', predict, name='predict'),
-    url(r'^predict/$', feed_forward, name='feed_forward')
+    url(r'^$', upload_img, name='upload_img'),
+    url(r'^predict/$', predict, name='predict')
 ]
 
 if settings.DEBUG:
