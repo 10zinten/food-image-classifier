@@ -33,7 +33,8 @@ def predict(request):
     img_path = os.path.join(media_path, 'ngoenga.png')
     img = Image.open(img_path)
     img = np.array(img)
-
+    img = imresize(img, (128, 128)).reshape(-1, 128, 128, 3).astype(np.float32)
+    print(img.dtype)
     # Load model and predict
     model_dir = os.path.join(os.path.dirname(settings.BASE_DIR), 'model/')
     model_meta_path = os.path.join(model_dir, 'Food-image-classifer-0.0001-2conv-model.meta')
@@ -41,6 +42,9 @@ def predict(request):
     with tf.Session() as sess:
         saver = tf.train.import_meta_graph(model_meta_path)
         saver.restore(sess, tf.train.latest_checkpoint(model_dir))
-        w1 = sess.run('W_conv1:0')
+        graph = tf.get_default_graph()
+        X = graph.get_tensor_by_name('X:0')
+        y_conv = graph.get_tensor_by_name('y_conv:0')
+        predict = sess.run(y_conv, feed_dict={X: img})
 
-    return HttpResponse(w1)
+    return HttpResponse(X.shape)
