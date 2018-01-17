@@ -7,7 +7,9 @@ from .forms import ClassifierForm
 from .models import Classifier
 
 from scipy.misc import imread, imresize, imsave
-import tensorflow as tf
+from keras.models import model_from_json
+from keras.preprocessing import image
+from keras.applications.imagenet_utils import preprocess_input
 import numpy as np
 from PIL import Image
 
@@ -30,22 +32,29 @@ def upload_img(request):
 
 def predict(request):
     media_path = os.path.join(os.path.dirname(settings.BASE_DIR), 'media_cdn/images')
-    img_path = os.path.join(media_path, 'ngoenga.png')
-    img = Image.open(img_path)
-    img = np.array(img)
-    img = imresize(img, (128, 128)).reshape(-1, 128, 128, 3).astype(np.float32)
-    print(img.dtype)
+    img_path = os.path.join(media_path, 'donut.jpg')
+    img = image.load_img(img_path, target_size=(224, 224))
+    x = image.img_to_array(img)
+    x = np.expand_dims(x, axis=0)
+    x = preprocess_input(x)
+    print(x.shape)
 
     # Load model and predict
-    model_dir = os.path.join(os.path.dirname(settings.BASE_DIR), 'model/')
-    model_meta_path = os.path.join(model_dir, 'Food-image-classifer-0.0001-2conv-model.meta')
+    model_dir = os.path.dirname(settings.BASE_DIR)
+    model_arch_path = os.path.join(model_dir, 'FIC-ResNet-50-TL-Model.json')
+    model_weight_path = os.path.join(model_dir, 'FIC-ResNet-50-TL-Model.h5')
 
-    with tf.Session() as sess:
-        saver = tf.train.import_meta_graph(model_meta_path)
-        saver.restore(sess, tf.train.latest_checkpoint(model_dir))
-        graph = tf.get_default_graph()
-        X = graph.get_tensor_by_name('X:0')
-        y_conv = graph.get_tensor_by_name('y_conv:0')
-        predict = sess.run(y_conv, feed_dict={X: img})
+    # load json and create model
+    json_file = open(model_arch_path)
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = model_from_json(loaded_model_json)
 
-    return HttpResponse(X.shape)
+    # load weights into new model
+    loaded_model.load_weights(model_weight_path)
+    print('Loaded model from disk')
+
+    # Prediction
+    preds = loaded_model.predict(x)
+
+    return HttpResponse(preds)
