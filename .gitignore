@@ -13,3 +13,5 @@ images/*
 media_cdn/*
 .ropeproject/*
 model/*
+floyd-hub/*
+*.h5

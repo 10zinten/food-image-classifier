@@ -13,7 +13,12 @@ from keras.applications.imagenet_utils import preprocess_input
 import numpy as np
 from PIL import Image
 
+# Path to image folder
+media_path = os.path.join(os.path.dirname(settings.BASE_DIR), 'media_cdn/images')
+
 def upload_img(request):
+    # Delete all existing images field and image from media directory
+    # Classifier.objects.all().delete()
     form = ClassifierForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         m = Classifier()
@@ -31,7 +36,6 @@ def upload_img(request):
 
 
 def predict(request):
-    media_path = os.path.join(os.path.dirname(settings.BASE_DIR), 'media_cdn/images')
     img_path = os.path.join(media_path, 'donut.jpg')
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)
