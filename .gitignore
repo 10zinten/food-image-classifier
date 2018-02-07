@@ -15,4 +15,4 @@ media_cdn/*
 model/*
 floyd-hub/*
 *.h5
-*.json
+output/*
