@@ -10,9 +10,10 @@ db.sqlite3
 images/*
 *.pyc
 *.npy
-media_cdn/*
+*/media_cdn/*
 .ropeproject/*
-model/*
+*/model/*
 floyd-hub/*
 *.h5
 output/*
+*/migrations/*
