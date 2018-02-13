@@ -1,6 +1,6 @@
 import os
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 
 from .forms import ClassifierForm
@@ -14,7 +14,10 @@ import numpy as np
 from PIL import Image
 
 # Path to image folder
-media_path = os.path.join(os.path.dirname(settings.BASE_DIR), 'media_cdn/images')
+media_path = os.path.join(settings.BASE_DIR, 'media_cdn/images')
+indian_model_name = 'FIC-Indian-Dish-ResNet-50-Model'
+western_model_name = 'FIC-Indian-Dish-ResNet-50-Model'
+
 
 def upload_img(request):
     # Delete all existing images field and image from media directory
@@ -36,7 +39,8 @@ def upload_img(request):
 
 
 def predict(request):
-    img_path = os.path.join(media_path, 'donut.jpg')
+    img_path = os.path.join(media_path, os.listdir(media_path)[0])
+    print(img_path)
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
@@ -44,9 +48,9 @@ def predict(request):
     print(x.shape)
 
     # Load model and predict
-    model_dir = os.path.dirname(settings.BASE_DIR)
-    model_arch_path = os.path.join(model_dir, 'FIC-ResNet-50-TL-Model.json')
-    model_weight_path = os.path.join(model_dir, 'FIC-ResNet-50-TL-Model.h5')
+    model_dir = os.path.join(os.path.dirname(settings.BASE_DIR), 'models', 'keras')
+    model_arch_path = os.path.join(model_dir, indian_model_name + '.json')
+    model_weight_path = os.path.join(model_dir, indian_model_name + '.h5')
 
     # load json and create model
     json_file = open(model_arch_path)
@@ -62,3 +66,6 @@ def predict(request):
     preds = loaded_model.predict(x)
 
     return HttpResponse(preds)
+
+def clean_up(request):
+    return HttpResponseRedirect('/')
