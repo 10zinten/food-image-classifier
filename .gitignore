@@ -16,4 +16,4 @@ images/*
 floyd-hub/*
 *.h5
 output/*
-*/migrations/*
+*migrations/*
