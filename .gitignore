@@ -12,7 +12,7 @@ images/*
 *.npy
 */media_cdn/*
 .ropeproject/*
-*/models/*
+*models/*
 floyd-hub/*
 *.h5
 output/*
