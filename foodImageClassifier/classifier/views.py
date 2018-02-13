@@ -68,4 +68,11 @@ def predict(request):
     return HttpResponse(preds)
 
 def clean_up(request):
+    # Delete image instance from model
+    Classifier.objects.all().delete()
+
+    # Delete image from media directory
+    for img in os.listdir(media_path):
+        os.remove(os.path.join(media_path, img))
+
     return HttpResponseRedirect('/')
