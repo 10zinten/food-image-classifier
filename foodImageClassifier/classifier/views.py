@@ -12,6 +12,8 @@ from keras.preprocessing import image
 from keras.applications.imagenet_utils import preprocess_input
 import numpy as np
 from PIL import Image
+import wikipedia as wk
+from bs4 import BeautifulSoup as bs
 
 # Path to input image
 media_path = os.path.join(settings.BASE_DIR, 'media_cdn/images')
@@ -41,6 +43,25 @@ def upload_img(request):
     }
     return render(request, 'image_form.html', context)
 
+def parse_ingredients(dish_name):
+
+    # Extract dish page and convert into html
+    dish = wk.page(dish_name)
+    html = dish.html()
+
+    # Parse html and extract ingredients
+    soup = bs(html, 'html.parser')
+    ingredient_table = soup.find_all('td', class_='ingredient')
+    ingredients = ingredient_table[0].find_all('a')
+
+    # store all ingredients and return
+    ingredient_list = []
+    for ingredient in ingredients:
+        ingredient_list.append(ingredient.string)
+
+    return ingredient_list
+
+
 def predict(request):
     img_path = os.path.join(media_path, os.listdir(media_path)[0])
     print(img_path)
@@ -68,10 +89,16 @@ def predict(request):
     # Prediction
     preds = loaded_model.predict(x)
 
-    # Extract name of dish
+    # Extract name of dish and ingredients
     dish_name = names[np.argmax(preds)]
+    context = {
+        'dish_name': dish_name,
+        'ingredients': parse_ingredients(dish_name)
+    }
 
-    return HttpResponse(dish_name)
+    print(context)
+
+    return HttpResponse(context)
 
 def clean_up(request):
     # Delete image instance from model
