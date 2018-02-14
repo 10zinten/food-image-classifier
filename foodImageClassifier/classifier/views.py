@@ -13,11 +13,16 @@ from keras.applications.imagenet_utils import preprocess_input
 import numpy as np
 from PIL import Image
 
-# Path to image folder
+# Path to input image
 media_path = os.path.join(settings.BASE_DIR, 'media_cdn/images')
-indian_model_name = 'FIC-Indian-Dish-ResNet-50-Model'
-western_model_name = 'FIC-Indian-Dish-ResNet-50-Model'
 
+# Model names
+indian_model_name = 'FIC-Indian-Dish-ResNet-50-Model'
+western_model_name = 'FIC-ResNet-50-TL-Model'
+
+
+# Class names
+names = ['briyani', 'dhosa', 'gulab-jamun', 'jalebi', 'samosa']
 
 def upload_img(request):
     # Delete all existing images field and image from media directory
@@ -36,7 +41,6 @@ def upload_img(request):
         "form": form,
     }
     return render(request, 'image_form.html', context)
-
 
 def predict(request):
     img_path = os.path.join(media_path, os.listdir(media_path)[0])
@@ -65,7 +69,10 @@ def predict(request):
     # Prediction
     preds = loaded_model.predict(x)
 
-    return HttpResponse(preds)
+    # Extract name of dish
+    dish_name = names[np.argmax(preds)]
+
+    return HttpResponse(dish_name)
 
 def clean_up(request):
     # Delete image instance from model
