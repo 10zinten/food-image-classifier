@@ -20,9 +20,8 @@ media_path = os.path.join(settings.BASE_DIR, 'media_cdn/images')
 indian_model_name = 'FIC-Indian-Dish-ResNet-50-Model'
 western_model_name = 'FIC-ResNet-50-TL-Model'
 
-
 # Class names
-names = ['briyani', 'dhosa', 'gulab-jamun', 'jalebi', 'samosa']
+names = ['biryani', 'dosa', 'gulab jamun', 'jalebi', 'samosa']
 
 def upload_img(request):
     # Delete all existing images field and image from media directory
