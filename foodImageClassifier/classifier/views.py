@@ -34,7 +34,7 @@ def upload_img(request):
         m.save()
 
         # result = feedfowrd()
-        return HttpResponse('image upload success')
+        return HttpResponseRedirect('/predict')
 
     context = {
         "form": form,
