@@ -1,15 +1,12 @@
-<html>
-    <title>
-        Food Image Classifier
-    </title>
-    <body>
-        <h1> Food Image classifier </h1>
-        <hr/>
+{% extends "base.html" %}
+
+{% block content %}
+   <div align=center>
+        <h3 align=center> Upload here </h3>
         <form method='POST' action='' enctype='multipart/form-data'>
             {% csrf_token %}
             {{ form.as_p }}
             <input type='submit' class='btn btn-default' value='predict' />
         </form>
-    </body>
-</html>
-
+    </div>
+{% endblock %}

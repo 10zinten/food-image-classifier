@@ -16,7 +16,7 @@ import wikipedia as wk
 from bs4 import BeautifulSoup as bs
 
 # Path to input image
-media_path = os.path.join(settings.BASE_DIR, 'media_cdn/images')
+media_path = os.path.join(os.path.dirname(settings.BASE_DIR), 'media_cdn/images')
 
 # Model names
 indian_model_name = 'FIC-Indian-Dish-ResNet-50-Model'
@@ -41,7 +41,7 @@ def upload_img(request):
     context = {
         "form": form,
     }
-    return render(request, 'image_form.html', context)
+    return render(request, 'indian_food.html', context)
 
 def parse_ingredients(dish_name):
 
@@ -98,7 +98,7 @@ def predict(request):
 
     print(context)
 
-    return HttpResponse(context)
+    return render(request, 'result.html', context)
 
 def clean_up(request):
     # Delete image instance from model
