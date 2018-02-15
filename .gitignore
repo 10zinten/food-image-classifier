@@ -10,7 +10,8 @@ db.sqlite3
 images/*
 *.pyc
 *.npy
-*/media_cdn/*
+media_cdn/*
+static_cdn/*
 .ropeproject/*
 *models/*
 floyd-hub/*
