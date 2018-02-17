@@ -10,6 +10,7 @@ from scipy.misc import imread, imresize, imsave
 from keras.models import model_from_json
 from keras.preprocessing import image
 from keras.applications.imagenet_utils import preprocess_input
+from keras import backend as K
 import numpy as np
 from PIL import Image
 import wikipedia as wk
@@ -24,6 +25,25 @@ western_model_name = 'FIC-ResNet-50-TL-Model'
 
 # Class names
 names = ['biryani', 'dosa', 'gulab jamun', 'jalebi', 'samosa']
+
+
+# Model paths
+model_dir = os.path.join(os.path.dirname(settings.BASE_DIR), 'models', 'keras')
+model_arch_path = os.path.join(model_dir, indian_model_name + '.json')
+model_weight_path = os.path.join(model_dir, indian_model_name + '.h5')
+
+# load json and create model
+json_file = open(model_arch_path)
+loaded_model_json = json_file.read()
+json_file.close()
+loaded_model = model_from_json(loaded_model_json)
+
+# load weights into new model
+loaded_model.load_weights(model_weight_path)
+print('Loaded model from disk')
+
+graph = K.get_session().graph
+
 
 def upload_img(request):
     # Delete all existing images field and image from media directory
@@ -63,6 +83,7 @@ def parse_ingredients(dish_name):
 
 
 def predict(request):
+
     img_path = os.path.join(media_path, os.listdir(media_path)[0])
     print(img_path)
     img = image.load_img(img_path, target_size=(224, 224))
@@ -71,23 +92,10 @@ def predict(request):
     x = preprocess_input(x)
     print(x.shape)
 
-    # Load model and predict
-    model_dir = os.path.join(os.path.dirname(settings.BASE_DIR), 'models', 'keras')
-    model_arch_path = os.path.join(model_dir, indian_model_name + '.json')
-    model_weight_path = os.path.join(model_dir, indian_model_name + '.h5')
-
-    # load json and create model
-    json_file = open(model_arch_path)
-    loaded_model_json = json_file.read()
-    json_file.close()
-    loaded_model = model_from_json(loaded_model_json)
-
-    # load weights into new model
-    loaded_model.load_weights(model_weight_path)
-    print('Loaded model from disk')
-
     # Prediction
-    preds = loaded_model.predict(x)
+    global graph
+    with graph.as_default():
+        preds = loaded_model.predict(x)
 
     # Extract name of dish and ingredients
     dish_name = names[np.argmax(preds)]
