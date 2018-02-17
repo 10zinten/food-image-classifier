@@ -76,6 +76,18 @@ def parse_ingredients(dish_name):
 
     # store all ingredients and return
     ingredient_list = []
+
+    if not ingredients:
+        ing_string = ingredient_table[0].text
+        ing_string = ing_string[1:]
+        ing_string_list = ing_string.split('optional ingredients:')
+        ingredients = ing_string_list[0].split(',') # [0] - main ingredients
+
+        for ingredient in ingredients:
+            ingredient_list.append(ingredient)
+
+        return ingredient_list
+
     for ingredient in ingredients:
         ingredient_list.append(ingredient.string)
 
