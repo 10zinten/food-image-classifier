@@ -46,8 +46,7 @@ graph = K.get_session().graph
 
 
 def upload_img(request):
-    # Delete all existing images field and image from media directory
-    # Classifier.objects.all().delete()
+
     form = ClassifierForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         m = Classifier()
@@ -96,6 +95,7 @@ def parse_ingredients(dish_name):
 
 def predict(request):
 
+    # Preprocess image
     img_path = os.path.join(media_path, os.listdir(media_path)[0])
     print(img_path)
     img = image.load_img(img_path, target_size=(224, 224))
