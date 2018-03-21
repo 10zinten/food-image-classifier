@@ -96,7 +96,11 @@ def ingredient(dish):
     return ingredients[1:]
 
 if __name__ == "__main__":
-    dish1 = "jalebi"
-    dish2 = "tandoori chicken"
-    print(dish2)
-    print(ingredient(dish2))
+    dishes = ['samosa', 'gulab jamun', 'biryani', 'tandoori chicken', 'momo (food)',
+              'dhokla', 'jalebi', 'pani puri', 'dosa']
+
+    for dish in dishes:
+        print("Testing -> ", dish)
+        assert 0 < len(ingredient(dish))
+
+    print("----------------- Test passed ---------------------- Ok")
