@@ -43,7 +43,7 @@ def ingredient(dish):
         url="https://www.sanjeevkapoor.com/Recipe/Tandoori-Chicken-Cooking-with-Olive-Oil.html"
         page= urllib.request.urlopen(url)
         soup= BeautifulSoup(page,"html.parser")
-        for link in soup.findAll('ul',{"class":"ingredients-unstyled"}):
+        for link in soup.findAll('ul',{"class":"list-unstyled"}):
             for data in link.findAll('li'):
                 #print(data.text)
                 ingredients.append(data.text)
