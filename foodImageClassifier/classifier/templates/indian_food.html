@@ -2,8 +2,11 @@
 
 {% block content %}
    <div align=center>
-       <h4> Biryani, Dosa, Gulab janum, Jelabi, Samosa </h4>
-        <h3 align=center> Upload here </h3>
+       <h2><b> Biryani, Dosa, Gulab-janum, Jelabi, Momo, Samosa, Tandoori Chicken </b></h2>
+       <hr/>
+       <br/>
+       <br/>
+       <h3 align=center> Upload Here </h3><hr/>
         <form method='POST' action='' enctype='multipart/form-data'>
             {% csrf_token %}
             {{ form.as_p }}

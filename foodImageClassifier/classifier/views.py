@@ -20,11 +20,11 @@ from bs4 import BeautifulSoup as bs
 media_path = os.path.join(os.path.dirname(settings.BASE_DIR), 'media_cdn/images')
 
 # Model names
-indian_model_name = 'FIC-Indian-Dish-ResNet-50-Model'
+indian_model_name = 'FIC-In-C7-B32-E11'
 western_model_name = 'FIC-ResNet-50-TL-Model'
 
 # Class names
-names = ['biryani', 'dosa', 'gulab jamun', 'jalebi', 'samosa']
+names = ['biryani', 'dosa', 'gulab jamun', 'jalebi', 'momo (food)', 'samosa', 'tandoori chicken']
 
 
 # Model paths
