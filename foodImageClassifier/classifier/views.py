@@ -16,6 +16,10 @@ from PIL import Image
 import wikipedia as wk
 from bs4 import BeautifulSoup as bs
 
+from .contrib.utils import ingredient
+
+print(ingredient)
+
 # Path to input image
 media_path = os.path.join(os.path.dirname(settings.BASE_DIR), 'media_cdn/images')
 
@@ -40,7 +44,7 @@ loaded_model = model_from_json(loaded_model_json)
 
 # load weights into new model
 loaded_model.load_weights(model_weight_path)
-print('Loaded model from disk')
+print('\n Loading model from disk ------------------\n')
 
 graph = K.get_session().graph
 
@@ -62,37 +66,6 @@ def upload_img(request):
     }
     return render(request, 'indian_food.html', context)
 
-def parse_ingredients(dish_name):
-
-    # Extract dish page and convert into html
-    dish = wk.page(dish_name)
-    html = dish.html()
-
-    # Parse html and extract ingredients
-    soup = bs(html, 'html.parser')
-    ingredient_table = soup.find_all('td', class_='ingredient')
-    ingredients = ingredient_table[0].find_all('a')
-
-    # store all ingredients and return
-    ingredient_list = []
-
-    if not ingredients:
-        ing_string = ingredient_table[0].text
-        ing_string = ing_string[1:]
-        ing_string_list = ing_string.split('optional ingredients:')
-        ingredients = ing_string_list[0].split(',') # [0] - main ingredients
-
-        for ingredient in ingredients:
-            ingredient_list.append(ingredient)
-
-        return ingredient_list
-
-    for ingredient in ingredients:
-        ingredient_list.append(ingredient.string)
-
-    return ingredient_list
-
-
 def predict(request):
 
     # Preprocess image
@@ -113,7 +86,7 @@ def predict(request):
     dish_name = names[np.argmax(preds)]
     context = {
         'dish_name': dish_name,
-        'ingredients': parse_ingredients(dish_name)
+        'ingredients': ingredient(dish_name)
     }
 
     print(context)
