@@ -6,7 +6,7 @@ from django.conf import settings
 from .forms import ClassifierForm
 from .models import Classifier
 
-from scipy.misc import imread, imresize, imsave
+# from scipy.misc import imresize, imsave
 from keras.models import model_from_json
 from keras.preprocessing import image
 from keras.applications.imagenet_utils import preprocess_input
@@ -24,8 +24,7 @@ indian_model_name = 'FIC-In-C7-B32-E11'
 western_model_name = 'FIC-ResNet-50-TL-Model'
 
 # Class names
-names = ['biryani', 'dosa', 'gulab jamun', 'jalebi', 'momo (food)', 'samosa', 'tandoori chicken']
-
+names = ['biryani', 'mosa', 'mulab Jamun', 'malebi', 'momo (food)', 'samosa', 'tandoori chicken']
 
 # Model paths
 model_dir = os.path.join(os.path.dirname(settings.BASE_DIR), 'models', 'keras')
@@ -110,7 +109,8 @@ def predict(request):
         preds = loaded_model.predict(x)
 
     # Extract name of dish and ingredients
-    dish_name = names[np.argmax(preds)]
+    classes = [name.title() for name in names]
+    dish_name = classes[np.argmax(preds)]
     context = {
         'dish_name': dish_name,
         'ingredients': parse_ingredients(dish_name)
